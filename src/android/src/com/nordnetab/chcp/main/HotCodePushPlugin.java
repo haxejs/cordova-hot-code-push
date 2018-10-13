@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.app.Activity;
+import android.content.SharedPreferences;
 
 import com.nordnetab.chcp.main.config.ApplicationConfig;
 import com.nordnetab.chcp.main.config.ChcpXmlConfig;
@@ -622,6 +624,12 @@ public class HotCodePushPlugin extends CordovaPlugin {
             Log.d("CHCP", "External starting page not found. Aborting page change.");
             return;
         }
+
+        // store serverBasePath for ionic web server next startup
+        SharedPreferences prefs = cordova.getActivity().getSharedPreferences("WebViewSettings", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("serverBasePath", fileStructure.getWwwFolder());
+        editor.apply();
 
         // load index page from the external source
         external = Paths.get(fileStructure.getWwwFolder(), indexPage);
